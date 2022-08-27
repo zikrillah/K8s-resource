@@ -1,0 +1,113 @@
+## Disable the swapfile first on each node
+sudo vi /etc/fstab
+put the command #/swap.img
+
+## Checks whether the br_netfilter module is loaded
+sudo lsmod|grep br_netfilter
+sudo modprobe br_netfilter
+sudo modprobe overlay
+
+## Create new configuration file
+cat << EOF | sudo tee /etc/modules-load.d/k8s.conf
+br_netfilter
+overlay
+EOF
+
+## Add etc hosts entry
+cat <<EOF >> /etc/hosts
+
+10.10.xx.xx k8s-master.zitechlab.my.id
+10.10.xx.xx k8s-node01.zitechlab.my.id
+10.10.xx.xx k8s-node02.zitechlab.my.id
+
+EOF
+
+## or using this command
+
+sudo tee -a /etc/hosts <<EOF
+
+10.10.xx.xx k8s-master.zitechlab.my.id
+10.10.xx.xx k8s-node01.zitechlab.my.id
+10.10.xx.xx k8s-node02.zitechlab.my.id
+
+EOF
+
+## Sysctl params required by setup, params persist across reboots
+cat <<EOF | sudo tee /etc/sysctl.d/k8s.conf
+net.bridge.bridge-nf-call-ip6tables = 1
+net.bridge.bridge-nf-call-iptables = 1
+net.ipv4.ip_forward = 1
+EOF
+
+## Apply sysctl params without reboot
+sudo sysctl --system
+
+## Docker setup the repo
+sudo apt-get update
+sudo apt-get install \
+    ca-certificates \
+    curl \
+    gnupg \
+    lsb-release
+sudo mkdir -p /etc/apt/keyrings
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+echo \
+  "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu \
+  $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+
+## Installing Docker
+sudo apt-get update
+sudo apt-get install docker-ce docker-ce-cli containerd.io docker-compose-plugin
+
+## Start and Enable Docker
+sudo mkdir /etc/docker
+cat <<EOF | sudo tee /etc/docker/daemon.json
+{
+ "exec-opts": ["native.cgroupdriver=systemd"],
+ "log-driver": "json-file",
+ "log-opts": {
+ "max-size": "100m"
+ },
+ "storage-driver": "overlay2"
+}
+EOF
+
+## Reload and Enable Docker
+sudo systemctl daemon-reload
+sudo systemctl enable docker
+sudo systemctl restart docker
+sudo systemctl status docker
+
+## Installing kubeadm, kubelet and kubectl
+sudo apt-get update
+sudo apt-get install -y apt-transport-https ca-certificates curl
+sudo curl -fsSLo /usr/share/keyrings/kubernetes-archive-keyring.gpg https://packages.cloud.google.com/apt/doc/apt-key.gpg
+echo "deb [signed-by=/usr/share/keyrings/kubernetes-archive-keyring.gpg] https://apt.kubernetes.io/ kubernetes-xenial main" | sudo tee /etc/apt/sources.list.d/kubernetes.list
+sudo apt-get update
+sudo apt-get install -y kubelet kubeadm kubectl
+sudo apt-mark hold kubelet kubeadm kubectl
+
+## Install CRI-O
+OS=xUbuntu_20.04
+VERSION=1.23
+
+# Add Kubic Repo
+echo "deb https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable/$OS/ /" | \
+sudo tee /etc/apt/sources.list.d/devel:kubic:libcontainers:stable.list
+
+# Import Public Key
+curl -L https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable/$OS/Release.key | \
+sudo apt-key add -
+
+# Add CRI Repo
+echo "deb http://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable:/cri-o:/$VERSION/$OS/ /" | \
+sudo tee /etc/apt/sources.list.d/devel:kubic:libcontainers:stable:cri-o:$VERSION.list
+
+# Import Public Key
+curl -L https://download.opensuse.org/repositories/devel:kubic:libcontainers:stable:cri-o:$VERSION/$OS/Release.key | \
+sudo apt-key add -
+
+sudo apt update
+sudo apt install cri-o cri-o-runc cri-tools -y
+sudo systemctl enable crio.service
+sudo systemctl start crio.service
