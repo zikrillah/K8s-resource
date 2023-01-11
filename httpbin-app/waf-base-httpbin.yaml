@@ -9,7 +9,8 @@ spec:
     template:
       name: POLICY_TEMPLATE_NGINX_BASE
     open-api-files:
-    - link: https://raw.githubusercontent.com/zikrillah/K8s-resource/master/httpbin-app/swagger-httpbin.json
+#    - link: https://raw.githubusercontent.com/zikrillah/K8s-resource/master/httpbin-app/swagger-httpbin.json
+    - link: https://raw.githubusercontent.com/zikrillah/K8s-resource/master/httpbin-app/httpbin.yaml
     blocking-settings:
       violations:
       - block: true
@@ -54,9 +55,9 @@ spec:
       - block: true
         description: Parameter value does not comply with regular expression
         name: VIOL_PARAMETER_VALUE_REGEXP
-#      - block: true
-#        description: Illegal URL
-#        name: VIOL_URL
+      - block: true
+        description: Illegal URL
+        name: VIOL_URL
       - block: true
         description: Illegal parameter
         name: VIOL_PARAMETER
@@ -65,4 +66,22 @@ spec:
         name: VIOL_PARAMETER_EMPTY_VALUE
       - block: true
         description: Illegal repeated parameter name
-        name: VIOL_PARAMETER_REPEATED 
+        name: VIOL_PARAMETER_REPEATED
+    filetypes:
+#    - link: https://raw.githubusercontent.com/zikrillah/K8s-resource/master/httpbin-app/filetypes.yaml
+      - name: '*'
+        type: wildcard
+        allowed: true
+        checkPostDataLength: false
+        postDataLength: 4096
+        checkRequestLength: false
+        requestLength: 8192
+        checkUrlLength: true
+        urlLength: 2048
+        checkQueryStringLength: true
+        queryStringLength: 2048
+        responseCheck: false
+      - name: bat
+        allowed: false
+      - name: pdf
+        allowed: false
