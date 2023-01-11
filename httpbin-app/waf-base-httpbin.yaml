@@ -1,15 +1,15 @@
 apiVersion: appprotect.f5.com/v1beta1
 kind: APPolicy
 metadata:
-  name: ap-def
+  name: waf-base-httpbin
 spec:
   policy:
-    name: ap-def
-    description: NGINX App Protect WAF API Security Policy for the Petstore API
+    name: waf-base-httpbin
+    description: NGINX App Protect WAF API Security Policy for the HTTPBIN
     template:
       name: POLICY_TEMPLATE_NGINX_BASE
-    # open-api-files:
-    #- link: https://raw.githubusercontent.com/aws-samples/api-gateway-secure-pet-store/master/src/main/resources/swagger.yaml
+    open-api-files:
+    - link: https://raw.githubusercontent.com/zikrillah/K8s-resource/master/httpbin-app/swagger-httpbin.json
     blocking-settings:
       violations:
       - block: true
@@ -54,9 +54,9 @@ spec:
       - block: true
         description: Parameter value does not comply with regular expression
         name: VIOL_PARAMETER_VALUE_REGEXP
-      - block: true
-        description: Illegal URL
-        name: VIOL_URL
+#      - block: true
+#        description: Illegal URL
+#        name: VIOL_URL
       - block: true
         description: Illegal parameter
         name: VIOL_PARAMETER
