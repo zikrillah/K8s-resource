@@ -67,5 +67,3 @@ Deploy arbitrator for nginx app protect dos
 kubectl apply -f deployment/appprotect-dos-arb.yaml
 kubectl apply -f service/appprotect-dos-arb-svc.yaml
 ```
-```
-
