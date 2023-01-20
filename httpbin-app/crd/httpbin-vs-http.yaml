@@ -1,0 +1,16 @@
+apiVersion: k8s.nginx.org/v1
+kind: VirtualServer
+metadata:
+  namespace: default
+  name: vs-httpbin
+spec:
+  ingressClassName: nginx
+  host: vs-httpbin.example.com
+  upstreams:
+  - name: pool-httpbin
+    service: httpbin-svc
+    port: 80
+  routes:
+  - path: /
+    action:
+      pass: pool-httpbin
