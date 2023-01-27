@@ -1,0 +1,22 @@
+apiVersion: k8s.nginx.org/v1
+kind: VirtualServer
+metadata:
+  namespace: default
+  name: vs-httpbin
+spec:
+  ingressClassName: nginx
+  host: vs-httpbin.example.com
+  upstreams:
+  - name: pool-httpbin
+    service: httpbin-svc
+    port: 80
+  routes:
+  - path: /httpbin/
+    location-snippets: |
+      #proxy_redirect: http://([^/])+/(httpbin/)?(.*)$ http://$1/httpbin/$3;
+      #sub_filter      http://([^/])+/?(.*)$ http://$1/httpbin/$2;
+      #sub_filter_once on;
+    action:
+      proxy:
+        upstream: pool-httpbin
+        rewritePath: /

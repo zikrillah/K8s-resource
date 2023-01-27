@@ -81,3 +81,4 @@ spec:
          #- -global-configuration=$(POD_NAMESPACE)/nginx-configuration
           - -nginx-status-allow-cidrs=0.0.0.0/0
           - -ingress-class=nginx
+          - -enable-snippets

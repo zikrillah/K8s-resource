@@ -1,0 +1,20 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: httpbin-ingress-oss
+  annotations:
+    nginx.ingress.kubernetes.io/proxy-redirect-from: "~^http://([^/]+)/(httpbin/)?(.*)$"
+    nginx.ingress.kubernetes.io/proxy-redirect-to: "https://$1/httpbin/$3"
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: httpbin-oss.example.com
+    http:
+      paths:
+      - path: /httpbin
+        pathType: Prefix
+        backend:
+          service:
+            name: httpbin-svc
+            port:
+              number: 80
