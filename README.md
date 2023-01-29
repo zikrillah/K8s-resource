@@ -5,7 +5,7 @@ Objective:
 - **Deploy** HTTPBIN sample ap and route using Nginx Plus KIC.
 - **Implement** Nginx NAP WAF to protect HTTPBIN app.
 
-# Deploy Nginx KIC
+## Deploy Nginx KIC
 Clone NIGNX KIC repo from github
 ```bash
 cd ~
