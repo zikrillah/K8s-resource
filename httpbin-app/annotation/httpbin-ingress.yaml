@@ -4,15 +4,22 @@ metadata:
   name: httpbin-ingress
   annotations:
     nginx.org/rewrites: "serviceName=httpbin-svc rewrite=/"
-    ppprotect.f5.com/app-protect-policy: "default/waf-base-httpbin"
-    appprotect.f5.com/app-protect-enable: "True"
-    appprotect.f5.com/app-protect-security-log-enable: "True"
-    appprotect.f5.com/app-protect-security-log: "default/logconf"
-    appprotect.f5.com/app-protect-security-log-destination: "syslog:server=syslog-svc.default:514"
+    nginx.org/location-snippets: |
+            proxy_set_header X-Script-Name /httpbin;
+    #appprotect.f5.com/app-protect-policy: "default/waf-base-httpbin"
+    #appprotect.f5.com/app-protect-enable: "True"
+    #appprotect.f5.com/app-protect-security-log-enable: "True"
+    #appprotect.f5.com/app-protect-security-log: "default/logconf"
+    #appprotect.f5.com/app-protect-security-log-destination: "syslog:server=syslog-svc.default:514"
 spec:
   ingressClassName: nginx
+  tls:
+    - hosts:
+        - httpbin-ic.zitechlab.my.id
+      secretName: zitechlab-server-secret
+      
   rules:
-  - host: httpbin.example.com
+  - host: httpbin-ic.zitechlab.my.id
     http:
       paths:
       - path: /httpbin/
