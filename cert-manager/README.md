@@ -29,7 +29,7 @@ Check the certificate status
 kubectl describe certificate
 ```
 output:
-/img/certificate.png
+![My Image](img/certificate.png)
 
 Check the certificate request status, if pending it's need more time
 ```bash
