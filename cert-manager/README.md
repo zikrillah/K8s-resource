@@ -36,4 +36,4 @@ Check the certificate request status, if pending it's need more time
 kubectl describe certificaterequest
 ```
 output:
-img/certificaterequest.png
+![My Image](img/certificaterequest.png)
