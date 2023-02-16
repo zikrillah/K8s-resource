@@ -16,13 +16,13 @@ spec:
   tls:
     - hosts:
         - httpbin-ic.zitechlab.my.id
-      secretName: zitechlab-server-secret
+      secretName: wlc-server-secret
       
   rules:
   - host: httpbin-ic.zitechlab.my.id
     http:
       paths:
-      - path: /httpbin/
+      - path: /
         pathType: Prefix
         backend:
           service:
