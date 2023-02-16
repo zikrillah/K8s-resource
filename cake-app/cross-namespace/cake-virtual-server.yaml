@@ -10,3 +10,7 @@ spec:
   routes:
   - path: /brownie
     route: brownie/brownie
+  - path: /chiffon
+    route: chiffon/chiffon
+  - path: /cheesecake
+    route: cheesecake/cheesecake

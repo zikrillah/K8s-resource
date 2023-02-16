@@ -1,0 +1,15 @@
+apiVersion: k8s.nginx.org/v1
+kind: VirtualServerRoute
+metadata:
+  name: chiffon
+  namespace: chiffon
+spec:
+  host: vs-cake.zitechlab.my.id
+  upstreams:
+  - name: chiffon
+    service: chiffon-svc
+    port: 80
+  subroutes:
+  - path: /chiffon
+    action:
+      pass: chiffon

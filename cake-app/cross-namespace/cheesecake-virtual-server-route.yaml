@@ -1,0 +1,15 @@
+apiVersion: k8s.nginx.org/v1
+kind: VirtualServerRoute
+metadata:
+  name: cheesecake
+  namespace: cheesecake
+spec:
+  host: vs-cake.zitechlab.my.id
+  upstreams:
+  - name: cheesecake
+    service: cheesecake-svc
+    port: 80
+  subroutes:
+  - path: /cheesecake
+    action:
+      pass: cheesecake
