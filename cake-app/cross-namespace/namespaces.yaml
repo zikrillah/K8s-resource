@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: cake
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: brownie
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: cheesecake
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: chiffon

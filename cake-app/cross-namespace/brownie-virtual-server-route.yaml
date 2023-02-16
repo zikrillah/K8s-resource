@@ -1,0 +1,15 @@
+apiVersion: k8s.nginx.org/v1
+kind: VirtualServerRoute
+metadata:
+  name: brownie
+  namespace: brownie
+spec:
+  host: vs-cake.zitechlab.my.id
+  upstreams:
+  - name: brownie
+    service: brownie-svc
+    port: 80
+  subroutes:
+  - path: /brownie
+    action:
+      pass: brownie

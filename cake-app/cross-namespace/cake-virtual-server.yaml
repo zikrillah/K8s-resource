@@ -1,0 +1,12 @@
+apiVersion: k8s.nginx.org/v1
+kind: VirtualServer
+metadata:
+  name: cake
+  namespace: cake
+spec:
+  host: vs-cake.zitechlab.my.id
+  tls:
+    secret: wlc-server-secret
+  routes:
+  - path: /brownie
+    route: brownie/brownie
