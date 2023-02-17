@@ -18,5 +18,14 @@ spec:
     action:
       pass: tea
   - path: /coffee
+    matches:
+    - conditions:
+      - variable: $request_method
+        value: POST
+      action:
+        return:
+          code: 403
+          type: text/plain
+          body: "You are rejected"
     action:
       pass: coffee
