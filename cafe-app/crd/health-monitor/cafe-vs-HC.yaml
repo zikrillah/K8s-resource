@@ -1,0 +1,41 @@
+apiVersion: k8s.nginx.org/v1
+kind: VirtualServer
+metadata:
+  name: cafe
+spec:
+  host: vs-cafe.zitechlab.my.id
+  tls:
+    secret: wlc-server-secret
+  upstreams:
+  - name: tea
+    service: tea-svc
+    port: 80
+    healthCheck:
+      enable: true
+      interval: 2s
+      jitter: 3s
+      fails: 5
+      passes: 5
+      connect-timeout: 10s
+      read-timeout: 10s
+      send-timeout: 10s
+      statusMatch: "! 500"
+  - name: coffee
+    service: coffee-svc
+    port: 80
+  routes:
+  - path: /tea
+    action:
+      pass: tea
+  - path: /coffee
+    matches:
+    - conditions:
+      - variable: $request_method
+        value: POST
+      action:
+        return:
+          code: 403
+          type: text/plain
+          body: "You are rejected"
+    action:
+      pass: coffee
