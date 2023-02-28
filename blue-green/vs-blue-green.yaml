@@ -1,0 +1,22 @@
+apiVersion: k8s.nginx.org/v1
+kind: VirtualServer
+metadata:
+  name: bluegreen-vs
+spec:
+  host: split-bluegreen.zitechlab.my.id
+  upstreams:
+  - name: greenbullet
+    service: greenbullet-svc
+    port: 80
+  - name: bluebullet
+    service: bluebullet-svc
+    port: 80
+  routes:
+  - path: /
+    splits:
+    - weight: 50
+      action:
+        pass: greenbullet
+    - weight: 50
+      action:
+        pass: bluebullet
