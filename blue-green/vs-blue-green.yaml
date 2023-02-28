@@ -14,9 +14,9 @@ spec:
   routes:
   - path: /
     splits:
-    - weight: 50
+    - weight: 10
       action:
         pass: greenbullet
-    - weight: 50
+    - weight: 90
       action:
         pass: bluebullet
