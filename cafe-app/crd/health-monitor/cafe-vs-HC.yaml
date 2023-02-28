@@ -23,6 +23,9 @@ spec:
   - name: coffee
     service: coffee-svc
     port: 80
+  - name: error
+    service: error-svc
+    port: 80
   routes:
   - path: /tea
     action:
@@ -39,3 +42,12 @@ spec:
           body: "You are rejected"
     action:
       pass: coffee
+  - path: /coffee/error
+    errorPages:
+    - codes: [502]
+      return:
+        code: 200
+        body: "<center><h1>oops this is embarrassing! We will be back shortly!</h1></center>"
+    action:
+      proxy:
+        upstream: error
