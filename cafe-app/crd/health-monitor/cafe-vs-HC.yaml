@@ -51,3 +51,8 @@ spec:
     action:
       proxy:
         upstream: error
+  - path: /coffee/limit
+    policies:
+    - name: rate-limit-policy
+    action:
+      pass: coffee
