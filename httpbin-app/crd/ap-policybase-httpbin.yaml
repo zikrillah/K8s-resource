@@ -68,7 +68,6 @@ spec:
         description: Illegal repeated parameter name
         name: VIOL_PARAMETER_REPEATED
     filetypes:
-#    - link: https://raw.githubusercontent.com/zikrillah/K8s-resource/master/httpbin-app/filetypes.yaml
       - name: '*'
         type: wildcard
         allowed: true
